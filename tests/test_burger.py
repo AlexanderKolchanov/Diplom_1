@@ -203,3 +203,21 @@ class TestBurger:
         original_order = burger.ingredients.copy()
         burger.move_ingredient(1, 1)
         assert burger.ingredients == original_order
+
+
+        def test_remove_ingredient_from_empty_burger(self):
+            """
+       Тест удаления ингредиента из пустого бургера.
+       Проверяет что при удалении из пустого списка возникает IndexError.
+           """
+    burger = Burger()
+    
+    # Проверяем что изначально пусто
+    assert burger.ingredients == []
+    
+    # Ожидаем IndexError при попытке удалить из пустого списка
+    with pytest.raises(IndexError):
+        burger.remove_ingredient(0)
+    
+    # Убеждаемся что список остался пустым
+    assert burger.ingredients == []
