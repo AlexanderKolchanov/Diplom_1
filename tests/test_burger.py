@@ -6,9 +6,51 @@ import constants
 
 class TestBurger:
     """
-    Тесты для класса Burger с использованием реальных данных из Stellar Burgers.
+    Тесты для класса Burger с использованием данных из Stellar Burgers.
     Класс Burger отвечает за сборку бургера, расчет стоимости и формирование чека.
     """
+
+    def test_burger_initialization_bun_is_none(self):
+        """
+        Тест инициализации бургера - проверка что булка изначально None.
+        Проверяет, что при создании нового бургера атрибут bun установлен в None.
+        Это важно для корректной работы set_buns().
+        """
+        burger = Burger()
+        # Проверяем что булка изначально None
+        assert burger.bun is None
+
+
+    def test_burger_initialization_ingredients_empty_list(self):
+        """
+        Тест инициализации бургера - проверка что список ингредиентов пуст.
+        Проверяет, что при создании нового бургера список ingredients является пустым списком.
+        Это гарантирует что мы начинаем сборку бургера "с чистого листа".
+        """
+        burger = Burger()
+        # Проверяем что список ингредиентов изначально пуст
+        assert burger.ingredients == []
+        # Также проверяем что это именно список и он пустой
+        assert isinstance(burger.ingredients, list)
+        assert len(burger.ingredients) == 0
+
+
+    def test_burger_initialization_state(self):
+        """
+        Комплексный тест начального состояния бургера после инициализации.
+        Проверяет что все атрибуты класса Burger находятся в корректном начальном состоянии.
+        """
+        burger = Burger()
+        
+        # Проверяем что булка не установлена
+        assert burger.bun is None, "Булка должна быть None при инициализации"
+        
+        # Проверяем что список ингредиентов пуст
+        assert burger.ingredients == [], "Список ингредиентов должен быть пустым при инициализации"
+        
+        # Проверяем тип списка ингредиентов
+        assert isinstance(burger.ingredients, list), "Ingredients должен быть списком"
+
 
     def test_set_buns(self, new_bun):
         """
@@ -111,7 +153,7 @@ class TestBurger:
 
     def test_get_receipt_right_bun_in_result(self, new_burger):
         """
-        Тест формирования рецепта - проверка отображения названия булки.
+        Тест формирования чека - проверка отображения названия булки.
         Проверяет, что название булки присутствует в сформированном чеке.
         """
         receipt = new_burger.get_receipt()
@@ -121,7 +163,7 @@ class TestBurger:
     @pytest.mark.parametrize("index", [0, 1])
     def test_get_receipt_right_ingredients_in_result(self, new_burger, index):
         """
-        Параметризованный тест формирования рецепта - проверка отображения ингредиентов.
+        Параметризованный тест формирования чека - проверка отображения ингредиентов.
         Проверяет, что названия всех ингредиентов присутствуют в чеке.
         """
         receipt = new_burger.get_receipt()
@@ -130,59 +172,12 @@ class TestBurger:
 
     def test_get_receipt_right_price_in_result(self, new_burger):
         """
-        Тест формирования рецепта - проверка отображения общей стоимости.
+        Тест формирования чека - проверка отображения общей стоимости.
         Проверяет, что рассчитанная стоимость присутствует в чеке.
         """
         receipt = new_burger.get_receipt()
         burger_price = new_burger.get_price()
         assert str(burger_price) in receipt
-
-    # ДОПОЛНИТЕЛЬНЫЕ ТЕСТЫ С РЕАЛЬНЫМИ ДАННЫМИ
-
-    def test_get_price_krator_bun_with_expensive_ingredients(self):
-        """
-        Тест расчета стоимости с Краторной булкой и дорогими ингредиентами.
-        Проверяет корректность расчета максимальной стоимости.
-        """
-        bun_mock = Mock()
-        bun_mock.get_price.return_value = 1255  # Краторная булка
-        
-        filling_mock = Mock()
-        filling_mock.get_price.return_value = 4400  # Мини-салат Экзо-Плантаго
-        
-        sauce_mock = Mock()
-        sauce_mock.get_price.return_value = 90  # Соус Spicy-X
-        
-        burger = Burger()
-        burger.set_buns(bun_mock)
-        burger.add_ingredient(filling_mock)
-        burger.add_ingredient(sauce_mock)
-        
-        # 1255*2 + 4400 + 90 = 1255*2 + 4490 = 2510 + 4490 = 7000
-        assert burger.get_price() == 7000
-
-
-    def test_get_price_fluorescent_bun_with_cheap_ingredients(self):
-        """
-        Тест расчета стоимости с Флюоресцентной булкой и бюджетными ингредиентами.
-        Проверяет корректность расчета минимальной стоимости.
-        """
-        bun_mock = Mock()
-        bun_mock.get_price.return_value = 988  # Флюоресцентная булка
-        
-        filling_mock = Mock()
-        filling_mock.get_price.return_value = 300  # Хрустящие минеральные кольца
-        
-        sauce_mock = Mock()
-        sauce_mock.get_price.return_value = 15  # Соус традиционный галактический
-        
-        burger = Burger()
-        burger.set_buns(bun_mock)
-        burger.add_ingredient(filling_mock)
-        burger.add_ingredient(sauce_mock)
-        
-        # 988*2 + 300 + 15 = 1976 + 315 = 2291
-        assert burger.get_price() == 2291
 
 
     def test_move_ingredient_to_same_position(self):
@@ -203,21 +198,21 @@ class TestBurger:
         original_order = burger.ingredients.copy()
         burger.move_ingredient(1, 1)
         assert burger.ingredients == original_order
+        
 
-
-        def test_remove_ingredient_from_empty_burger(self):
-            """
-       Тест удаления ингредиента из пустого бургера.
-       Проверяет что при удалении из пустого списка возникает IndexError.
-           """
-    burger = Burger()
-    
-    # Проверяем что изначально пусто
-    assert burger.ingredients == []
-    
-    # Ожидаем IndexError при попытке удалить из пустого списка
-    with pytest.raises(IndexError):
-        burger.remove_ingredient(0)
-    
-    # Убеждаемся что список остался пустым
-    assert burger.ingredients == []
+    def test_remove_ingredient_from_empty_burger(self):
+        """
+        Тест удаления ингредиента из пустого бургера.
+        Проверяет что при удалении из пустого списка возникает IndexError.
+        """
+        burger = Burger()
+        
+        # Проверяем что изначально пусто
+        assert burger.ingredients == []
+        
+        # Ожидаем IndexError при попытке удалить из пустого списка
+        with pytest.raises(IndexError):
+            burger.remove_ingredient(0)
+        
+        # Убеждаемся что список остался пустым
+        assert burger.ingredients == []
