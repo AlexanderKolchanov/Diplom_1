@@ -7,7 +7,7 @@ import constants
 class TestBurger:
     """
     Тесты для класса Burger с использованием реальных данных из Stellar Burgers.
-    Класс Burger отвечает за сборку бургера, расчет стоимости и формирование рецепта.
+    Класс Burger отвечает за сборку бургера, расчет стоимости и формирование чека.
     """
 
     def test_set_buns(self, new_bun):
@@ -112,7 +112,7 @@ class TestBurger:
     def test_get_receipt_right_bun_in_result(self, new_burger):
         """
         Тест формирования рецепта - проверка отображения названия булки.
-        Проверяет, что название булки присутствует в сформированном рецепте.
+        Проверяет, что название булки присутствует в сформированном чеке.
         """
         receipt = new_burger.get_receipt()
         assert new_burger.bun.get_name() in receipt
@@ -122,7 +122,7 @@ class TestBurger:
     def test_get_receipt_right_ingredients_in_result(self, new_burger, index):
         """
         Параметризованный тест формирования рецепта - проверка отображения ингредиентов.
-        Проверяет, что названия всех ингредиентов присутствуют в рецепте.
+        Проверяет, что названия всех ингредиентов присутствуют в чеке.
         """
         receipt = new_burger.get_receipt()
         assert new_burger.ingredients[index].get_name() in receipt
@@ -131,7 +131,7 @@ class TestBurger:
     def test_get_receipt_right_price_in_result(self, new_burger):
         """
         Тест формирования рецепта - проверка отображения общей стоимости.
-        Проверяет, что рассчитанная стоимость присутствует в рецепте.
+        Проверяет, что рассчитанная стоимость присутствует в чеке.
         """
         receipt = new_burger.get_receipt()
         burger_price = new_burger.get_price()
