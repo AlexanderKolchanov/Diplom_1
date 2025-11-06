@@ -153,32 +153,36 @@ class TestBurger:
 
     def test_get_receipt_right_bun_in_result(self, new_burger):
         """
-        Тест формирования чека - проверка отображения названия булки.
-        Проверяет, что название булки присутствует в сформированном чеке.
+        Тест что булка присутствует в чеке в правильном формате ДВАЖДЫ.
         """
         receipt = new_burger.get_receipt()
-        assert new_burger.bun.get_name() in receipt
-
+        bun_line = f'(==== {new_burger.bun.get_name()} ====)'
+        # Проверяем что строка с булкой есть ДВАЖДЫ (в начале и в конце)
+        assert receipt.count(bun_line) == 2
 
     @pytest.mark.parametrize("index", [0, 1])
     def test_get_receipt_right_ingredients_in_result(self, new_burger, index):
         """
         Параметризованный тест формирования чека - проверка отображения ингредиентов.
-        Проверяет, что названия всех ингредиентов присутствуют в чеке.
+        Проверяет, что названия всех ингредиентов присутствуют в чеке в правильном формате.
         """
         receipt = new_burger.get_receipt()
-        assert new_burger.ingredients[index].get_name() in receipt
+       # Проверяем ингредиент в правильном формате: = {type} {name} =
+        ingredient = new_burger.ingredients[index]
+        ingredient_line = f'= {str(ingredient.get_type()).lower()} {ingredient.get_name()} ='
+        assert ingredient_line in receipt
 
 
     def test_get_receipt_right_price_in_result(self, new_burger):
         """
         Тест формирования чека - проверка отображения общей стоимости.
-        Проверяет, что рассчитанная стоимость присутствует в чеке.
+        Проверяет, что рассчитанная стоимость присутствует в чеке в правильном формате.
         """
         receipt = new_burger.get_receipt()
         burger_price = new_burger.get_price()
-        assert str(burger_price) in receipt
-
+        # Проверяем цену в правильном формате: Price: {price}
+        price_line = f'Price: {burger_price}'
+        assert price_line in receipt
 
     def test_move_ingredient_to_same_position(self):
         """
